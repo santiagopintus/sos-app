@@ -7,7 +7,7 @@ const defaultInput = {
   marginBottom: margins[1],
 };
 
-export default layout = StyleSheet.create({ 
+export default layout = StyleSheet.create({
   input: {
     ...defaultInput,
   },
@@ -22,5 +22,8 @@ export default layout = StyleSheet.create({
   textArea: {
     ...defaultInput,
     height: 150,
+    borderColor: colors.fontColor,
+    borderWidth: 1,
+    // backgroundColor: "#fcfcfc"
   },
 });

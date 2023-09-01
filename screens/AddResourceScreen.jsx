@@ -45,11 +45,21 @@ const NewResourceScreen = ({ navigation }) => {
       {/* IF TYPE CONTACTO LABEL IS "NOMBRE" */}
       <TextInput
         style={form.input}
+        autoFocus={true}
         label={type === "contacto" ? "Nombre del contacto" : "Título"}
         placeholder={type === "contacto" ? "Nombre del contacto" : "Título"}
         onChangeText={(title) => setTitle(title)}
       />
 
+      {type === "contacto" && (
+        <TextInput
+          keyboardType="phone-pad"
+          style={form.input}
+          label={"Número de teléfono"}
+          dataDetectorTypes={"phoneNumber"}
+          onChangeText={(text) => setImgSrc(text)}
+        />
+      )}
       {type === "foto" && (
         <TextInput
           style={form.input}

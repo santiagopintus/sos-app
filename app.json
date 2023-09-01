@@ -11,8 +11,14 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
+    "assetBundlePatterns": ["**/*"],
+    "plugins": [
+      [
+        "expo-contacts",
+        {
+          "contactsPermission": "Allow SOS to access your contacts. This way you don't need to manually type phone numbers"
+        }
+      ]
     ],
     "ios": {
       "supportsTablet": true
