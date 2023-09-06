@@ -1,25 +1,61 @@
-import { View } from "react-native";
+import { View, ViewStyle } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { TextInput } from "react-native-paper";
 import Button from "../components/Button";
-import global from "../styles/global/global";
+import globalStyles from "../styles/global/globalStyles";
 import { useContext, useEffect, useState } from "react";
 import utils from "../styles/global/utils";
 import form from "../styles/layout/form";
-import { MainContext } from "../context/MainContext";
+import { MainContext, Resource } from "../context/MainContext";
+import { ContactType } from "../context/ContactsContext";
+import ContactPicker from "../components/ContactPicker";
 
 const NewResourceScreen = ({ navigation }) => {
   /* CONTEXT */
   const mainContext = useContext(MainContext);
-  const [title, setTitle] = useState("");
-  const [type, setType] = useState("cita");
-  const [imgSrc, setImgSrc] = useState("");
-  const [textContent, setTextContent] = useState("");
-  const [href, setHref] = useState("");
-  const [resource, setResource] = useState({});
+  const [title, setTitle] = useState<string | null>(null);
+  const [type, setType] = useState<string | null>("cita");
+  const [imgSrc, setImgSrc] = useState<string | null>(null);
+  const [contact, setContact] = useState<ContactType | null>(null);
+  const [textContent, setTextContent] = useState<string | null>(null);
+  const [href, setHref] = useState<string | null>(null);
+  const [resource, setResource] = useState<Resource>();
+  // const [savingResource, setSavingResource] = useState<{} | null>(null);
 
   const handleSave = () => {
-    setResource({ title, type, imgSrc, href });
+    if (type === null) return;
+
+    switch (type) {
+      case "contact":
+        if (contact !== null) saveContact();
+        break;
+      default:
+        saveGeneric();
+    }
+  };
+
+  const saveContact = () => {
+    //Message with red flag
+    setHref(
+      `https://api.whatsapp.com/send?phone=${sanitizeNumber(
+        contact.phoneNumbers[0].number
+      )}&text=Hola!%20C%C3%B3mo%20est%C3%A1s%3F%20%F0%9F%9A%A9`
+    );
+    setTitle(`${contact.firstName} ${contact.lastName}`);
+  };
+
+  const sanitizeNumber = (telNum: string) => {
+    return telNum.replace(/[^\d]/g, ""); //Remove non digit characters
+  };
+
+  const saveGeneric = () => {
+    setResource({
+      title,
+      href,
+      textContent,
+      type,
+      imgSrc,
+    });
   };
 
   /* On Resource change save to DB */
@@ -30,7 +66,7 @@ const NewResourceScreen = ({ navigation }) => {
   }, [resource]);
 
   return (
-    <View style={[utils.container, global.app]}>
+    <View style={[globalStyles.app as ViewStyle, utils.container]}>
       <Picker
         selectedValue={type}
         onValueChange={(val, i) => setType(val)}
@@ -51,15 +87,7 @@ const NewResourceScreen = ({ navigation }) => {
         onChangeText={(title) => setTitle(title)}
       />
 
-      {type === "contacto" && (
-        <TextInput
-          keyboardType="phone-pad"
-          style={form.input}
-          label={"Número de teléfono"}
-          dataDetectorTypes={"phoneNumber"}
-          onChangeText={(text) => setImgSrc(text)}
-        />
-      )}
+      {type === "contacto" && <ContactPicker onContactSelect={setContact} />}
       {type === "foto" && (
         <TextInput
           style={form.input}

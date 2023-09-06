@@ -6,22 +6,22 @@ export interface ContactsContextType {
   setContacts: React.Dispatch<React.SetStateAction<ContactType[]>>;
 }
 export type ContactType = {
-  contactType: string;
+  id: string;
+  contactType?: string;
   firstName: string;
   lastName: string;
+  imageAvailable?: boolean;
+  lookupKey?: string;
+  name?: string;
+  phoneNumbers?: PhoneNumber[];
+};
+
+export type PhoneNumber = {
   id: string;
-  imageAvailable: boolean;
-  lookupKey: string;
-  name: string;
-  phoneNumbers: [
-    {
-      id: string;
-      isPrimary: number;
-      label: string;
-      number: string;
-      type: string;
-    }
-  ];
+  isPrimary?: number;
+  label?: string;
+  number: string;
+  type?: string;
 };
 
 export const ContactsContext = createContext({} as ContactsContextType);
@@ -43,9 +43,9 @@ const ContactsProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <ContactsContext.Provider
-      value={{ contacts, setContacts }}
-    ></ContactsContext.Provider>
+    <ContactsContext.Provider value={{ contacts, setContacts }}>
+      {children}
+    </ContactsContext.Provider>
   );
 };
 

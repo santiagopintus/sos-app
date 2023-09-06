@@ -1,8 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Resource } from "../../context/MainContext";
 
 const dataType = "resources";
 /* GETTER */
-export const getItemsFromStorage = async () => {
+export const getItemsFromStorage = async (): Promise<Resource[]> => {
   try {
     const resourcesString = await AsyncStorage.getItem(dataType);
     const resourcesArray = resourcesString ? JSON.parse(resourcesString) : [];
@@ -14,11 +15,26 @@ export const getItemsFromStorage = async () => {
 };
 
 /* REMOVE */
-// Function to remove an item from AsyncStorage
-export const removeItem = async () => {
+// Function to remove an item from AsyncStorage by ID
+export const removeItemById = async (id: string) => {
   try {
-    await AsyncStorage.removeItem(dataType);
-    console.log("Item removed successfully.");
+    const resourcesArray = await getItemsFromStorage();
+
+    // Find the index of the item with the specified ID
+    const indexToRemove = resourcesArray.findIndex(
+      (resource) => resource.id === id
+    );
+
+    if (indexToRemove !== -1) {
+      // Remove the item from the array
+      resourcesArray.splice(indexToRemove, 1);
+
+      // Update AsyncStorage with the modified array
+      await AsyncStorage.setItem(dataType, JSON.stringify(resourcesArray));
+      console.log("Item removed successfully.");
+    } else {
+      console.log("Item with ID not found.");
+    }
   } catch (error) {
     console.error("Error removing item:", error);
   }

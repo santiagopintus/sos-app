@@ -3,7 +3,7 @@ import { Title } from "react-native-paper";
 import Button from "../components/Button";
 import utils from "../styles/global/utils";
 import ResourcesContainer from "../components/containers/ResourcesContainer";
-import global from "../styles/global/global";
+import global from "../styles/global/globalStyles";
 
 const ResourcesScreen = ({ navigation }) => {
   return (

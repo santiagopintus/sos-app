@@ -1,7 +1,13 @@
 import { TouchableOpacity, Text, Linking } from "react-native";
 import utils from "../styles/global/utils";
 
-const Button = ({ style, mode = "primary", onPress, to = null, children }) => {
+const Button = ({
+  style = {},
+  mode = "primary",
+  onPress,
+  to = null,
+  children,
+}) => {
   let buttonStyles;
 
   switch (mode) {
@@ -44,7 +50,6 @@ const Button = ({ style, mode = "primary", onPress, to = null, children }) => {
   };
 
   const handleOnPress = () => {
-    console.log("PRESSED");
     isLink() ? handleLink(to) : onPress();
   };
 
